@@ -1,0 +1,12 @@
+{
+  "id": "notes",
+  "name": "Notes",
+  "shortcode": "notes",
+  "icon": "📝",
+  "version": "1.0.0",
+  "description": "Quick markdown notes — paste, type, done",
+  "author": "",
+  "builtin": true,
+  "backend": true,
+  "frontend": true
+}

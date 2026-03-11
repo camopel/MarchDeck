@@ -1,0 +1,13 @@
+node_modules/
+__pycache__/
+*.pyc
+dist/
+.venv/
+*.egg-info/
+.env
+*.db
+*.bak
+*.crt
+*.key
+*.pem
+certs/

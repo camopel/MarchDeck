@@ -1,0 +1,578 @@
+/* Video Cast — Chromecast controller */
+
+:root {
+  --accent: #4f46e5;
+  --accent-light: #818cf8;
+  --bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --text: #1c1c1e;
+  --text-secondary: #6b7280;
+  --border: rgba(0, 0, 0, 0.08);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #818cf8;
+    --accent-light: #6366f1;
+    --bg: #000000;
+    --card-bg: #1c1c1e;
+    --text: #f2f2f7;
+    --text-secondary: #8e8e93;
+    --border: rgba(255, 255, 255, 0.08);
+    --shadow: 0 1px 3px rgba(0,0,0,0.3);
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'SF Pro Display', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page { min-height: 100dvh; display: flex; flex-direction: column; }
+
+/* ── Nav bar ─────────────────────────────────────────── */
+
+.nav-bar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center;
+  padding: calc(12px + var(--safe-top)) 16px 12px;
+  background: var(--card-bg);
+  border-bottom: 0.5px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.nav-btn {
+  background: none; border: none;
+  color: var(--accent); font-size: 15px;
+  cursor: pointer; padding: 4px 0;
+  font-weight: 500;
+}
+
+.title {
+  flex: 1; text-align: center;
+  font-size: 17px; font-weight: 600;
+}
+
+.spacer { width: 60px; }
+
+/* ── Content ─────────────────────────────────────────── */
+
+.content {
+  flex: 1; padding: 12px;
+  padding-bottom: calc(12px + var(--safe-bottom));
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Cards ───────────────────────────────────────────── */
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.card-label {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.card-header .card-label { margin-bottom: 0; }
+
+/* ── Device selector ─────────────────────────────────── */
+
+.refresh-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 13px;
+  color: var(--accent);
+  cursor: pointer;
+  font-weight: 500;
+}
+.refresh-btn:active { opacity: 0.7; }
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+/* ── Power button ────────────────────────────────────── */
+
+.power-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: var(--bg);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.power-btn:active { transform: scale(0.92); }
+.power-btn.on {
+  border-color: #22c55e;
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+.power-btn.off {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+.power-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ── Pairing ─────────────────────────────────────────── */
+
+.pair-section {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 0.5px solid var(--border);
+}
+
+.pair-btn {
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--accent);
+  font-size: 14px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.pair-btn:active { opacity: 0.7; }
+
+.pair-hint {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.pair-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pin-input {
+  width: 100px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 20px;
+  text-align: center;
+  letter-spacing: 4px;
+  font-weight: 600;
+  outline: none;
+}
+.pin-input:focus { border-color: var(--accent); }
+
+.pair-confirm-btn {
+  padding: 10px 16px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pair-confirm-btn:disabled { opacity: 0.5; }
+
+.pair-cancel-btn {
+  padding: 10px;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.device-select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236b7280' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+}
+
+.empty-text {
+  color: var(--text-secondary);
+  font-size: 14px;
+  text-align: center;
+  padding: 8px 0;
+}
+
+/* ── URL input ───────────────────────────────────────── */
+
+.url-row {
+  display: flex;
+  gap: 8px;
+}
+
+.url-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.url-input:focus { border-color: var(--accent); }
+.url-input::placeholder { color: var(--text-secondary); opacity: 0.6; }
+
+.cast-btn {
+  padding: 12px 20px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+}
+.cast-btn:active { opacity: 0.8; }
+.cast-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Error banner ────────────────────────────────────── */
+
+.error-banner {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  font-size: 14px;
+  cursor: pointer;
+}
+@media (prefers-color-scheme: dark) {
+  .error-banner {
+    background: #450a0a;
+    color: #fca5a5;
+  }
+}
+
+/* ── Now playing ─────────────────────────────────────── */
+
+.now-playing { overflow: hidden; }
+
+.poster-row {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.poster {
+  width: 80px;
+  height: 112px;
+  object-fit: cover;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.now-info { flex: 1; min-width: 0; }
+
+.now-title {
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.now-state {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-transform: capitalize;
+}
+
+/* ── Progress bar ────────────────────────────────────── */
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.3s linear;
+}
+
+.time-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  margin-bottom: 16px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Transport controls ──────────────────────────────── */
+
+.controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.ctrl-btn {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 16px;
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--text);
+  transition: background 0.15s;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+}
+.ctrl-btn:active { background: var(--accent); color: white; }
+
+.ctrl-play {
+  padding: 14px 24px;
+  font-size: 22px;
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.ctrl-play:active { opacity: 0.8; }
+
+.ctrl-stop {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+/* ── Volume ──────────────────────────────────────────── */
+
+.volume-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+}
+
+.vol-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+  user-select: none;
+}
+.vol-btn:active { opacity: 0.6; }
+.vol-btn.muted { opacity: 0.5; }
+
+.vol-action {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 16px;
+  font-size: 14px;
+  color: var(--text);
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+}
+.vol-action:active { background: var(--accent); color: white; }
+
+/* ── Episodes ────────────────────────────────────────── */
+
+.episode-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.episode-btn {
+  padding: 8px 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.episode-btn:active { background: var(--border); }
+
+/* ── TV Remote D-pad ─────────────────────────────────── */
+
+.remote-pad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 14px;
+}
+
+.remote-row {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.remote-spacer {
+  width: 56px;
+  height: 56px;
+}
+
+.remote-btn {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  transition: background 0.1s;
+}
+.remote-btn:active { background: var(--accent); color: white; }
+
+.remote-ok {
+  width: 60px;
+  height: 60px;
+  font-size: 15px;
+  font-weight: 700;
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.remote-ok:active { opacity: 0.75; }
+
+.remote-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.remote-action-btn {
+  padding: 10px 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+.remote-action-btn:active { background: var(--accent); color: white; }
+
+.remote-volume {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 0.5px solid var(--border);
+}
+
+.remote-vol-btn {
+  flex: 1;
+  padding: 12px 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+  -webkit-touch-callout: none;
+  text-align: center;
+}
+.remote-vol-btn:active { background: var(--accent); color: white; }
+
+/* ── Loading spinner ─────────────────────────────────── */
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+}
+
+.spinner {
+  width: 32px; height: 32px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}

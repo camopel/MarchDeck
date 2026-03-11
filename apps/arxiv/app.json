@@ -1,0 +1,12 @@
+{
+  "id": "arxiv",
+  "name": "ArXiv",
+  "shortcode": "arxiv",
+  "icon": "📄",
+  "version": "1.0.0",
+  "description": "Research paper search and topic browser with local semantic index",
+  "author": "",
+  "builtin": true,
+  "backend": true,
+  "frontend": true
+}

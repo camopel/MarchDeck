@@ -1,0 +1,12 @@
+{
+  "id": "cast",
+  "name": "Cast",
+  "shortcode": "cast",
+  "icon": "📺",
+  "version": "1.0.0",
+  "description": "Cast streaming video to Chromecast and control Android TV",
+  "author": "",
+  "builtin": true,
+  "backend": true,
+  "frontend": true
+}

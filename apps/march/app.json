@@ -1,0 +1,12 @@
+{
+  "id": "march",
+  "name": "March",
+  "shortcode": "march",
+  "icon": "𝗠𝗔𝗥",
+  "version": "1.0.0",
+  "description": "Chat with your AI agent — sessions, streaming, voice, attachments, and dashboard",
+  "author": "",
+  "builtin": true,
+  "backend": true,
+  "frontend": true
+}

@@ -1,0 +1,181 @@
+# March Deck
+
+**The PWA frontend for [March](https://github.com/camopel/March).**
+
+March Deck is a collection of mini-apps you can open on your phone, tablet, or desktop. No app store. No account. Just install and add to your home screen.
+
+Requires **[March](https://github.com/camopel/March)** (`pip install march-ai`) running on your server.
+
+```
+┌─────────────────────────────────────────────┐
+│             March Deck (PWA)                │
+│                                             │
+│  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐  │
+│  │March│ │Finvz│ │ArXiv│ │ Sys │ │Files│  │
+│  │  🤖 │ │  📰 │ │  📄 │ │  📊 │ │  📁 │  │
+│  └─────┘ └─────┘ └─────┘ └─────┘ └─────┘  │
+│  ┌─────┐ ┌─────┐ ┌─────┐                   │
+│  │Notes│ │ Cast│ │OClaw│                   │
+│  │  📝 │ │  📺 │ │  🦞 │                   │
+│  └─────┘ └─────┘ └─────┘                   │
+│                                             │
+│  + Add your own apps                        │
+└─────────────────────────────────────────────┘
+```
+
+---
+
+## Apps
+
+| App | Description |
+|-----|-------------|
+| **🤖 March** | Chat with your March agent — sessions, streaming, voice, dashboard |
+| **📰 Finviz** | Financial news 24-hour summary with built-in crawler |
+| **📄 ArXiv** | Research paper semantic search with category management |
+| **📊 System** | Real-time CPU, RAM, disk, GPU stats, services, and cron jobs |
+| **📁 Files** | Browse, preview, and download files from your server |
+| **📝 Notes** | Quick markdown notes — paste, type, done |
+| **📺 Cast** | Cast streaming video to Chromecast and control Android TV |
+| **🦞 OpenClaw** | OpenClaw agent management — config, channels, tools, diagnostics |
+
+Every app is a self-contained plugin. Add your own by dropping a folder in `apps/`.
+
+---
+
+## Quick Start
+
+```bash
+pip install march-ai          # install March agent first
+git clone https://github.com/camopel/march-deck.git
+cd march-deck
+bash scripts/install.sh
+```
+
+The install script:
+- Installs all Python dependencies (with `--user`, no virtualenv)
+- Installs app-specific deps (faiss-cpu, crawl4ai, boto3, psutil, pyyaml, etc.)
+- Installs Ollama (if not present) and pulls the nomic-embed-text embedding model for ArXiv semantic search
+- Sets up the Finviz crawler on a cron schedule
+- Generates VAPID keys for push notifications
+- Builds all React frontends
+- Creates a systemd service (Linux) or launchd plist (macOS)
+
+Then add to your phone's home screen:
+- **iPhone:** Safari → Share → "Add to Home Screen"
+- **Android:** Chrome → Menu → "Install app"
+
+---
+
+## How It Works
+
+March Deck connects to March's WS channel via REST + WebSocket. The March app proxies all session management and chat to March — no duplicate state.
+
+```
+┌──────────────┐  REST + WebSocket  ┌──────────────┐
+│  March Deck  │ ◄────────────────► │    March     │
+│  (Browser)   │                    │   Agent      │
+│              │                    │              │
+│  chat        │                    │  ws_channel  │
+│  dashboard   │                    │  (port 8101) │
+│  apps        │                    │              │
+└──────────────┘                    └──────────────┘
+```
+
+No cloud. Your agent, your device, your network.
+
+---
+
+## Data Directory
+
+All runtime data lives in `~/.march-deck/` (hardcoded, not configurable):
+
+```
+~/.march-deck/
+├── config.yaml              # global config
+├── certs/                   # VAPID keys
+├── logs/                    # unified logs
+└── app/                     # per-app runtime data
+    ├── finviz/
+    ├── arxiv/
+    ├── notes/
+    ├── system/
+    ├── files/
+    ├── cast/
+    └── openclaw/
+```
+
+---
+
+## Building Your Own App
+
+```bash
+./march-deck new my-app
+```
+
+This creates `apps/my-app/` from the template with a FastAPI backend and React frontend wired together. Update `app.json` with your icon and description, then restart the server.
+
+The template uses the shared `AppShell` component and `base.css` for consistent styling and dark mode.
+
+---
+
+## Configuration
+
+`~/.march-deck/config.yaml` (generated by install):
+
+```yaml
+server:
+  host: 0.0.0.0
+  port: 8800
+
+push:
+  vapid_email: nobody@localhost
+
+llm:
+  type: bedrock           # bedrock | ollama | openai | claude | litellm | openrouter
+  model: arn:aws:bedrock:us-west-2:123456789:inference-profile/us.anthropic.claude-...
+  # endpoint: ""          # required for ollama, litellm; optional for openai
+  # api_key: ""           # required for openai, claude, openrouter
+  temperature: 0.7
+  streaming: true
+
+apps:
+  march:
+    api_url: http://localhost:8101
+  finviz:
+    crawl_interval: 7200
+  arxiv:
+    embedding_model: nomic-embed-text
+  files:
+    root: /
+    show_hidden: false
+```
+
+---
+
+## Requirements
+
+- Python 3.9+
+- Node.js 18+
+- Linux or macOS
+- [March](https://github.com/camopel/March) (`pip install march-ai`)
+- [Ollama](https://ollama.ai) (auto-installed if missing; used for ArXiv semantic search)
+- [Tailscale](https://tailscale.com/download) (optional, for remote HTTPS access)
+- AWS credentials in `~/.aws` (only if using Bedrock LLM provider)
+
+---
+
+## Development
+
+```bash
+# Backend
+python3 scripts/server.py
+
+# Frontend (hot reload)
+cd apps/my-app/frontend && npm install && npm run dev
+```
+
+---
+
+## License
+
+[MIT](LICENSE)

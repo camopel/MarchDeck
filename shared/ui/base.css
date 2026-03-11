@@ -1,0 +1,332 @@
+/*
+ * March Deck Shared Base CSS — THE canonical source of styles.
+ *
+ * All March Deck apps should import this file instead of maintaining their own.
+ * Location: shared/ui/base.css
+ * Symlink into your app: ln -s ../../../../shared/ui/base.css src/base.css
+ *
+ * Requires: <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+ * This file handles safe-area insets for iPhone notch/Dynamic Island.
+ */
+
+:root {
+  --bg: #fff;
+  --text: #1a1a1a;
+  --text-secondary: #666;
+  --surface: #f5f5f7;
+  --border: #e5e5e5;
+  --accent: #16a34a;
+  --card-bg: #fff;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+  --font: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000;
+    --text: #f5f5f7;
+    --text-secondary: #8e8e93;
+    --surface: #1c1c1e;
+    --border: #38383a;
+    --card-bg: #1c1c1e;
+  }
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1, h2, h3 { color: var(--text); }
+
+/* ── Nav header ──────────────────────────────────────────────────────────── */
+/* Sticky header with safe-area padding for iPhone notch/Dynamic Island.    */
+
+.nav-header {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  padding-top: calc(12px + var(--safe-top));
+  min-height: calc(49px + var(--safe-top));
+  background: var(--card-bg);
+  border-bottom: 0.5px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.nav-header .nav-back {
+  font-size: 17px;
+  color: #007aff;
+  text-decoration: none;
+  padding: 8px;
+  flex-shrink: 0;
+}
+
+.nav-header .nav-title {
+  flex: 1;
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.nav-header .nav-spacer {
+  width: 60px;
+  flex-shrink: 0;
+}
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+
+button {
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 15px;
+  font-family: var(--font);
+  transition: opacity 0.15s;
+}
+button:hover:not(:disabled) { opacity: 0.8; }
+button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+button.danger {
+  border-color: #dc2626;
+  color: #dc2626;
+  background: transparent;
+}
+button.small { padding: 4px 12px; font-size: 14px; }
+
+/* ── Inputs ──────────────────────────────────────────────────────────────── */
+
+input, select {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 16px; /* ≥16px prevents iOS zoom-on-focus */
+  font-family: var(--font);
+  outline: none;
+}
+input:focus, select:focus { border-color: var(--accent); }
+
+/* ── Cards ───────────────────────────────────────────────────────────────── */
+
+.card {
+  background: var(--card-bg);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+/* ── Tables ──────────────────────────────────────────────────────────────── */
+
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 0.5px solid var(--border); }
+th { font-size: 13px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--surface); }
+
+/* ── Tab bar ─────────────────────────────────────────────────────────────── */
+/* Sticks below the nav-header. top = 49px + safe-top to match header.     */
+
+.tab-bar {
+  display: flex;
+  gap: 0;
+  background: var(--card-bg);
+  border-bottom: 0.5px solid var(--border);
+  position: sticky;
+  top: calc(49px + var(--safe-top));
+  z-index: 40;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+
+.tab-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 14px 8px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab-btn:hover:not(:disabled) { color: var(--text); opacity: 1; }
+.tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+/* ── Segmented control (iOS style picker) ────────────────────────────────── */
+
+.segment-control {
+  display: flex;
+  gap: 0;
+  background: var(--surface);
+  border-radius: 8px;
+  padding: 2px;
+}
+.segment-btn {
+  flex: 1;
+  padding: 8px 0;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.segment-btn.active {
+  background: var(--card-bg);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* ── Toggle switch ───────────────────────────────────────────────────────── */
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+}
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: var(--border);
+  border-radius: 20px;
+  transition: background 0.2s;
+}
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  height: 14px; width: 14px;
+  left: 3px; top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+.toggle input:checked + .toggle-slider { background: var(--accent); }
+.toggle input:checked + .toggle-slider::before { transform: translateX(16px); }
+
+/* ── Spinner ─────────────────────────────────────────────────────────────── */
+
+.spinner {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Pill filter buttons ─────────────────────────────────────────────────── */
+
+.pill-group {
+  display: flex;
+  gap: 8px;
+}
+.pill-btn {
+  font-size: 14px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 400;
+}
+.pill-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ── Live indicator ──────────────────────────────────────────────────────── */
+
+.live-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.live-dot.live {
+  background: #16a34a;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+.live-dot.closed { background: #9ca3af; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* ── Content wrapper ─────────────────────────────────────────────────────── */
+
+.app-content {
+  padding: 12px 12px 0;
+  padding-bottom: calc(40px + var(--safe-bottom));
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+.empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+
+/* ── Utility: hide lightweight-charts attribution ────────────────────────── */
+
+.tv-lightweight-charts table tr:last-child td:last-child { display: none !important; }
+a[href*="tradingview"], a[href*="lightweight-charts"] { display: none !important; }
+
+/* ── Utility: hide date picker chrome ────────────────────────────────────── */
+
+input[type="date"]::-webkit-inner-spin-button,
+input[type="date"]::-webkit-clear-button,
+input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
+input[type="date"] { appearance: none; -webkit-appearance: none; cursor: pointer; }

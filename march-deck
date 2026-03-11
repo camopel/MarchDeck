@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# march-deck CLI wrapper
+VENV="${MARCHDECK_VENV:-$HOME/Workspace/.venv}"
+PYTHON="$VENV/bin/python3"
+[[ ! -x "$PYTHON" ]] && PYTHON="python3"
+exec "$PYTHON" "$(dirname "$0")/scripts/cli.py" "$@"

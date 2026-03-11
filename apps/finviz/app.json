@@ -1,0 +1,12 @@
+{
+  "id": "finviz",
+  "name": "Finviz",
+  "shortcode": "finviz",
+  "icon": "📰",
+  "version": "1.0.0",
+  "description": "Financial news — 24-hour summary from Finviz",
+  "author": "",
+  "builtin": true,
+  "backend": true,
+  "frontend": true
+}

@@ -1,0 +1,12 @@
+{
+  "id": "system",
+  "name": "System",
+  "shortcode": "system",
+  "icon": "📊",
+  "version": "1.0.0",
+  "description": "Real-time CPU, RAM, disk, GPU stats, cron jobs, and service health",
+  "author": "",
+  "builtin": true,
+  "backend": true,
+  "frontend": true
+}

@@ -1,0 +1,60 @@
+:root {
+  --bg: #fff; --text: #1a1a1a; --text-secondary: #666;
+  --surface: #f5f5f7; --border: #e5e5e5; --accent: #16a34a;
+  --card-bg: #fff; --safe-bottom: env(safe-area-inset-bottom, 0px);
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000; --text: #f5f5f7; --text-secondary: #8e8e93;
+    --surface: #1c1c1e; --border: #38383a; --card-bg: #1c1c1e;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body, #root { height: 100%; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg); color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+.page { min-height: 100dvh; padding-bottom: calc(20px + var(--safe-bottom)); }
+.nav-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; position: sticky; top: 0; z-index: 50;
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+}
+.nav-btn {
+  background: none; border: none; color: var(--accent);
+  font-size: 15px; cursor: pointer; padding: 4px 0; min-width: 60px;
+}
+.title { font-size: 17px; font-weight: 700; }
+.content { padding: 0 16px; }
+.stat-row {
+  display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;
+}
+.stat-box {
+  flex: 1; min-width: 80px; padding: 10px 12px; border-radius: 12px;
+  background: var(--surface);
+}
+.stat-box .value { font-size: 20px; font-weight: 700; }
+.stat-box .label { font-size: 11px; color: var(--text-secondary); }
+.filter-row { display: flex; gap: 6px; margin-bottom: 12px; }
+.filter-btn {
+  flex: 1; padding: 8px 4px; border-radius: 8px; border: none;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  background: var(--surface); color: var(--text-secondary);
+}
+.filter-btn.active { background: var(--accent); color: #fff; }
+.headline {
+  padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer;
+}
+.headline .h-title { font-size: 14px; font-weight: 500; line-height: 1.4; }
+.headline .h-meta { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+.article-content {
+  font-size: 14px; line-height: 1.7; white-space: pre-wrap;
+  color: var(--text-secondary); padding: 16px;
+}
+.loading { text-align: center; padding: 40px; color: var(--text-secondary); }
+.error { text-align: center; padding: 20px; color: #f87171; }

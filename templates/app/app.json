@@ -1,0 +1,11 @@
+{
+  "id": "my-app",
+  "name": "My App",
+  "shortcode": "my-app",
+  "icon": "🚀",
+  "version": "1.0.0",
+  "description": "A fullstack app with API and UI",
+  "builtin": false,
+  "backend": true,
+  "frontend": true
+}

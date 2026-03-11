@@ -1,0 +1,316 @@
+/* OpenClaw Admin — app-specific styles */
+@import './base.css';
+
+/* Terminal-like output */
+.terminal {
+  background: #111;
+  color: #e0e0e0;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 12px;
+  border-radius: 10px;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+/* Config editor */
+.config-editor {
+  width: 100%;
+  min-height: 60vh;
+  height: calc(100vh - 220px);
+  background: var(--surface);
+  color: var(--text);
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  resize: vertical;
+  outline: none;
+}
+.config-editor:focus {
+  border-color: var(--accent);
+}
+
+/* Session list */
+.session-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-bottom: 0.5px solid var(--border);
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.session-item:hover {
+  background: var(--surface);
+}
+.session-item:last-child {
+  border-bottom: none;
+}
+
+.session-key {
+  font-size: 13px;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  color: var(--text);
+  word-break: break-all;
+}
+
+.session-meta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.session-badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 600;
+  margin-right: 6px;
+}
+.session-badge.group { background: #3b82f620; color: #3b82f6; }
+.session-badge.direct { background: #16a34a20; color: #16a34a; }
+.session-badge.cron { background: #f59e0b20; color: #f59e0b; }
+
+/* Chat view */
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px 0;
+}
+
+.chat-msg {
+  padding: 8px 12px;
+  border-radius: 10px;
+  max-width: 85%;
+  font-size: 14px;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.chat-msg.user {
+  align-self: flex-end;
+  background: #007aff;
+  color: #fff;
+}
+
+.chat-msg.assistant {
+  align-self: flex-start;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.chat-msg.system {
+  align-self: center;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-style: italic;
+}
+
+.chat-msg.tool,
+.chat-msg.toolResult {
+  align-self: flex-start;
+  background: transparent;
+  border: 0.5px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 13px;
+  max-width: 95%;
+}
+
+.chat-msg.tool .chat-body,
+.chat-msg.toolResult .chat-body {
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.chat-role {
+  font-size: 11px;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.chat-ts {
+  font-size: 11px;
+  opacity: 0.5;
+  font-variant-numeric: tabular-nums;
+}
+
+.chat-body {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.chat-body pre {
+  background: #0d0d0d;
+  padding: 8px 10px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 12px;
+  margin: 6px 0;
+}
+
+.chat-body code {
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+  font-size: 12px;
+  background: rgba(128,128,128,0.15);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+.chat-body pre code {
+  background: none;
+  padding: 0;
+}
+
+.chat-body h2, .chat-body h3, .chat-body h4 {
+  margin: 8px 0 4px;
+  font-size: 14px;
+}
+
+.chat-body ul {
+  margin: 4px 0;
+  padding-left: 18px;
+}
+
+.chat-body li {
+  margin: 2px 0;
+}
+
+.chat-body a {
+  color: #007aff;
+  text-decoration: none;
+}
+
+.chat-body strong {
+  font-weight: 600;
+}
+
+/* Action buttons row */
+.action-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+/* Status indicator */
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.status-badge.ok { background: #16a34a20; color: #16a34a; }
+.status-badge.warn { background: #f59e0b20; color: #f59e0b; }
+.status-badge.error { background: #dc262620; color: #dc2626; }
+
+/* Tool buttons — vertical layout */
+.tool-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tool-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--card-bg);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.tool-btn:hover:not(:disabled) {
+  background: var(--surface);
+}
+
+.tool-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+  width: 36px;
+  text-align: center;
+}
+
+.tool-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.tool-desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  display: block;
+  margin-top: 1px;
+}
+
+/* Stack label + desc vertically */
+.tool-btn {
+  flex-wrap: wrap;
+}
+.tool-label, .tool-desc {
+  flex-basis: calc(100% - 48px);
+}
+
+.danger-btn {
+  border-color: #dc262640;
+}
+.danger-btn .tool-label {
+  color: #dc2626;
+}
+
+/* Info grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+@media (max-width: 500px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.info-item {
+  padding: 10px;
+  background: var(--surface);
+  border-radius: 8px;
+}
+.info-item .label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.info-item .value {
+  font-size: 15px;
+  font-weight: 500;
+  margin-top: 2px;
+}

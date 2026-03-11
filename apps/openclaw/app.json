@@ -1,0 +1,12 @@
+{
+  "id": "openclaw",
+  "name": "OpenClaw",
+  "shortcode": "openclaw",
+  "icon": "🦞",
+  "version": "1.0.0",
+  "description": "OpenClaw agent management — config, channels, tools, and diagnostics",
+  "author": "",
+  "builtin": true,
+  "backend": true,
+  "frontend": true
+}

@@ -1,0 +1,12 @@
+{
+  "id": "files",
+  "name": "Files",
+  "shortcode": "files",
+  "icon": "📁",
+  "version": "1.0.0",
+  "description": "Browse, preview, download and share files",
+  "author": "",
+  "builtin": true,
+  "backend": true,
+  "frontend": true
+}
