@@ -1,10 +1,8 @@
 # March Deck
 
-**The PWA frontend for [March](https://github.com/camopel/March).**
+**A personal PWA app platform — mini-apps on your phone, tablet, or desktop.**
 
-March Deck is a collection of mini-apps you can open on your phone, tablet, or desktop. No app store. No account. Just install and add to your home screen.
-
-Requires **[March](https://github.com/camopel/March)** (`pip install march-ai`) running on your server.
+March Deck is a self-hosted collection of mini-apps served from your own machine. No app store. No account. Just install and add to your home screen.
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -12,7 +10,7 @@ Requires **[March](https://github.com/camopel/March)** (`pip install march-ai`) 
 │                                             │
 │  ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐  │
 │  │March│ │Finvz│ │ArXiv│ │ Sys │ │Files│  │
-│  │  🤖 │ │  📰 │ │  📄 │ │  📊 │ │  📁 │  │
+│  │ 𝗠𝗔𝗥 │ │  📰 │ │  📄 │ │  📊 │ │  📁 │  │
 │  └─────┘ └─────┘ └─────┘ └─────┘ └─────┘  │
 │  ┌─────┐ ┌─────┐ ┌─────┐                   │
 │  │Notes│ │ Cast│ │OClaw│                   │
@@ -29,14 +27,14 @@ Requires **[March](https://github.com/camopel/March)** (`pip install march-ai`) 
 
 | App | Description |
 |-----|-------------|
-| **🤖 March** | Chat with your March agent — sessions, streaming, voice, dashboard |
-| **📰 Finviz** | Financial news 24-hour summary with built-in crawler |
+| **𝗠𝗔𝗥 March** | Chat with your AI agent — sessions, streaming, voice, attachments, and dashboard |
+| **📰 Finviz** | Financial news — 24-hour summary with built-in crawler |
 | **📄 ArXiv** | Research paper semantic search with category management |
 | **📊 System** | Real-time CPU, RAM, disk, GPU stats, services, and cron jobs |
 | **📁 Files** | Browse, preview, and download files from your server |
 | **📝 Notes** | Quick markdown notes — paste, type, done |
 | **📺 Cast** | Cast streaming video to Chromecast and control Android TV |
-| **🦞 OpenClaw** | OpenClaw agent management — config, channels, tools, diagnostics |
+| **🦞 OpenClaw** | OpenClaw agent management — config, channels, tools, and diagnostics |
 
 Every app is a self-contained plugin. Add your own by dropping a folder in `apps/`.
 
@@ -45,14 +43,13 @@ Every app is a self-contained plugin. Add your own by dropping a folder in `apps
 ## Quick Start
 
 ```bash
-pip install march-ai          # install March agent first
 git clone https://github.com/camopel/march-deck.git
 cd march-deck
 bash scripts/install.sh
 ```
 
 The install script:
-- Installs all Python dependencies (with `--user`, no virtualenv)
+- Installs Python dependencies (with `--user`, no virtualenv)
 - Installs app-specific deps (faiss-cpu, crawl4ai, boto3, psutil, pyyaml, etc.)
 - Installs Ollama (if not present) and pulls the nomic-embed-text embedding model for ArXiv semantic search
 - Sets up the Finviz crawler on a cron schedule
@@ -68,26 +65,37 @@ Then add to your phone's home screen:
 
 ## How It Works
 
-March Deck connects to March's WS channel via REST + WebSocket. The March app proxies all session management and chat to March — no duplicate state.
+March Deck runs a FastAPI server that auto-discovers app plugins from `apps/`. Each app has its own backend (Python) and frontend (React/TypeScript). The main PWA shell loads them into a unified home screen.
+
+The **March** app connects to a running [March](https://github.com/camopel/March) agent via REST + WebSocket for chat, sessions, and dashboard. Other apps are standalone.
 
 ```
-┌──────────────┐  REST + WebSocket  ┌──────────────┐
-│  March Deck  │ ◄────────────────► │    March     │
-│  (Browser)   │                    │   Agent      │
-│              │                    │              │
-│  chat        │                    │  ws_channel  │
-│  dashboard   │                    │  (port 8101) │
-│  apps        │                    │              │
+┌──────────────┐                    ┌──────────────┐
+│  March Deck  │  REST + WebSocket  │    March     │
+│  (Browser)   │ ◄────────────────► │   Agent      │
+│              │                    │  (optional)  │
+│  apps        │                    │  ws_channel  │
+│  home screen │                    │  (port 8101) │
+│  push notifs │                    │              │
 └──────────────┘                    └──────────────┘
 ```
 
-No cloud. Your agent, your device, your network.
+---
+
+## CLI
+
+```bash
+./march-deck new <app-name>     # Create a new app from template
+./march-deck serve              # Start the server
+./march-deck build              # Build all app frontends
+./march-deck help               # Show help
+```
 
 ---
 
 ## Data Directory
 
-All runtime data lives in `~/.march-deck/` (hardcoded, not configurable):
+All runtime data lives in `~/.march-deck/`:
 
 ```
 ~/.march-deck/
@@ -131,16 +139,16 @@ push:
   vapid_email: nobody@localhost
 
 llm:
-  type: bedrock           # bedrock | ollama | openai | claude | litellm | openrouter
-  model: arn:aws:bedrock:us-west-2:123456789:inference-profile/us.anthropic.claude-...
-  # endpoint: ""          # required for ollama, litellm; optional for openai
-  # api_key: ""           # required for openai, claude, openrouter
-  temperature: 0.7
-  streaming: true
+  default: local
+  providers:
+    local:
+      type: ollama
+      endpoint: http://localhost:11434
+      model: llama3
+      temperature: 0.7
+      streaming: true
 
 apps:
-  march:
-    api_url: http://localhost:8101
   finviz:
     crawl_interval: 7200
   arxiv:
@@ -150,6 +158,8 @@ apps:
     show_hidden: false
 ```
 
+LLM provider types: `ollama`, `bedrock`, `openai`, `claude`, `litellm`, `openrouter`.
+
 ---
 
 ## Requirements
@@ -157,9 +167,9 @@ apps:
 - Python 3.9+
 - Node.js 18+
 - Linux or macOS
-- [March](https://github.com/camopel/March) (`pip install march-ai`)
 - [Ollama](https://ollama.ai) (auto-installed if missing; used for ArXiv semantic search)
-- [Tailscale](https://tailscale.com/download) (optional, for remote HTTPS access)
+- [March](https://github.com/camopel/March) (optional — only needed for the March chat app)
+- [Tailscale](https://tailscale.com/download) (optional — for remote HTTPS access)
 - AWS credentials in `~/.aws` (only if using Bedrock LLM provider)
 
 ---
